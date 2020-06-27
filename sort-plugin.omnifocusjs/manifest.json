@@ -1,0 +1,17 @@
+{
+   "description": "Sorting scripts for OmniFocus", 
+   "author": "Joel Berger", 
+   "actions": [
+      {
+         "image": "sort.png", 
+         "identifier": "sortProjects"
+      }, 
+      {
+         "image": "sort.png", 
+         "identifier": "sortTags"
+      }
+   ], 
+   "version": "1.0", 
+   "defaultLocale": "en", 
+   "identifier": "com.joelberger.omnifocus.sort-plugin"
+}

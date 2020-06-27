@@ -1,0 +1,31 @@
+/*{
+	"type": "action",
+	"targets": ["omnifocus"],
+	"author": "Otto Automator",
+	"identifier": "com.omni-automation.display-host-project",
+	"version": "1.0",
+	"description": "This action will display the host project of the selected task.",
+	"label": "Display Host Project",
+	"shortLabel": "Display Project"
+}*/
+(() => {
+	var action = new PlugIn.Action(function(selection, sender){
+		// action code
+		// selection options: tasks, projects, folders, tags
+		task = selection.tasks[0]
+		project = task.containingProject
+		if(project){
+			projID = project.id.primaryKey
+			urlStr = "omnifocus:///task/" + projID
+			URL.fromString(urlStr).call(reply => {})
+		}
+	});
+
+	action.validate = function(selection, sender){
+		// validation code
+		// selection options: tasks, projects, folders, tags
+		return (selection.tasks.length === 1)
+	};
+    
+	return action;
+})();

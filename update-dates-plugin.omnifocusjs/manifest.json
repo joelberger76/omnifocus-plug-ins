@@ -1,0 +1,21 @@
+{
+   "description": "Task Date Management for OmniFocus", 
+   "author": "Joel Berger", 
+   "actions": [
+      {
+         "image": "completeAwaitReply.png", 
+         "identifier": "completeAwaitReply"
+      }, 
+      {
+         "image": "deferToTomorrow.png", 
+         "identifier": "deferToTomorrow"
+      }, 
+      {
+         "image": "pushOut.png", 
+         "identifier": "pushOut"
+      }
+   ], 
+   "version": "1.0", 
+   "defaultLocale": "en", 
+   "identifier": "com.joelberger.omnifocus.update-dates-plugin"
+}

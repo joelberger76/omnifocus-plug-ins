@@ -1,0 +1,261 @@
+//Maintain Bed Tasks
+/*{
+	"author": "Joel Berger",
+	"targets": ["omnifocus"],
+	"type": "action",
+	"identifier": "com.joelberger.omnifocus.maintain-bed-tasks",
+	"version": "1.0",
+	"description": "Manage tasks for mattress and box spring maintenance",
+	"label": "Maintain Bed Tasks",
+	"mediumLabel": "Maintain Bed Tasks",
+	"paletteLabel": "Maintain Bed Tasks",
+}*/
+(() => {
+   let action = new PlugIn.Action(function(selection) {
+      //Setup dates
+		var now = new Date();
+		var todayStart = Calendar.current.startOfDay(now);
+      var dc = new DateComponents();
+      
+      //Setup menu
+		var bedMenu = new Form.Field.Option(
+         "bedOptions",
+		   "Bed Maintenance",
+		   [0, 1, 2],
+		   ["Show Actions", "Show Dates", "Push to Weekend"],
+		   0
+		);
+		
+      var inputForm = new Form();
+      inputForm.addField(bedMenu);
+      var formPrompt = "Select Action";
+      var buttonTitle = "Continue";
+      var formPromise = inputForm.show(formPrompt, buttonTitle);
+		
+      inputForm.validate = function(formObject){
+         return true;
+		}
+		
+      formPromise.then(function(formObject){
+			var chosenIndex = formObject.values['bedOptions'];
+         
+         try {
+            var mattressTaskArray = findTask("Rotate/Flip Mattress");
+		   	if (mattressTaskArray.length == 0) {throw "TASK Rotate/Flip Mattress NOT FOUND";}
+		   	var boxSpringTaskArray = findTask("Rotate Box Spring");
+            if (boxSpringTaskArray.length == 0) {throw "TASK Rotate Box Spring NOT FOUND"}
+                      
+            switch (chosenIndex) {
+               case 0:
+                  //Show Actions
+                  showActions(mattressTaskArray[0], boxSpringTaskArray[0], todayStart);
+                  break;
+               case 1:
+                  //Show Dates
+                  showDates(mattressTaskArray[0], boxSpringTaskArray[0]);
+                  break;
+               case 2:
+                  //Push to Weekend
+                  pushToWeekend(mattressTaskArray[0], boxSpringTaskArray[0], todayStart);
+            }
+			}
+         catch (error) {
+            console.error(error);
+            return false;  
+         }        
+		});
+
+		formPromise.catch(function(err){
+			console.error("Form cancelled", err.message);
+		});	
+   });
+
+    
+	action.validate = function(selection){
+		return true;
+	};
+        
+	return action;
+})();
+
+
+function getNextDayOfWeek(date, dayOfWeek) {
+   var daysArray = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+   var dayNum = daysArray.indexOf(dayOfWeek);
+   
+   var resultDate = new Date(date.getTime());
+   resultDate.setDate(date.getDate() + (7 + dayNum - date.getDay()) % 7);
+
+   if (resultDate.getDate() == date.getDate()) {
+      resultDate.setDate(resultDate.getDate() + 7);
+   }
+
+   return resultDate;
+}
+
+function daysBetween(first, second) {
+
+    // Copy date parts of the timestamps, discarding the time parts.
+    var one = new Date(first.getFullYear(), first.getMonth(), first.getDate());
+    var two = new Date(second.getFullYear(), second.getMonth(), second.getDate());
+
+    // Do the math.
+    var millisecondsPerDay = 1000 * 60 * 60 * 24;
+    var millisBetween = two.getTime() - one.getTime();
+    var days = millisBetween / millisecondsPerDay;
+
+    // Round down.
+    return Math.floor(days);
+}
+
+function findTask(targetTaskName) {
+   var masterTaskArray = new Array();
+   flattenedTasks.filter(function(item) {
+      return (isTaskRemaining(item) && 
+              !item.hasChildren && 
+              item.name == targetTaskName);
+   }).forEach(task => {masterTaskArray.push(task);});
+   
+   return masterTaskArray;
+}
+
+function showDates(mattressTask, boxSpringTask) {
+   var numDays = Math.abs(daysBetween(mattressTask.deferDate, boxSpringTask.deferDate));
+   
+   var alertText = "Mattress: " + mattressTask.deferDate.toLocaleDateString() + "\nBox Spring: " + boxSpringTask.deferDate.toLocaleDateString();
+   var alert = new Alert("Task Dates", alertText);
+   
+   if (numDays <= 31) {
+      //iOS and Mac create button order differently
+      var syncButton = -1;
+      if (Device.current.iOS) {
+         alert.addOption("Sync Dates"); 
+         alert.addOption("OK");  
+         syncButton = 0;
+      }
+      else {
+         alert.addOption("OK");  
+         alert.addOption("Sync Dates");
+         syncButton = 1;
+      }
+   }
+
+   alert.show(function(result){
+      if (result == syncButton) {
+         if (mattressTask.deferDate > boxSpringTask.deferDate) {
+            boxSpringTask.deferDate = mattressTask.deferDate;
+         }
+         else {
+            mattressTask.deferDate = boxSpringTask.deferDate;
+         }
+      }
+   }); 
+   
+   return true;
+}
+
+function pushToWeekend(mattressTask, boxSpringTask, todStart) {
+   if (!isTaskAvailable(mattressTask) && 
+       !isTaskAvailable(boxSpringTask)) {
+      var msg = "No available bed maintenance tasks."; 
+      new Alert("Error", msg).show();
+      console.error(msg);
+      return false;
+   }
+   
+   var nextSat = getNextDayOfWeek(todStart, "Saturday");
+   
+   if (isTaskAvailable(mattressTask)) {
+      mattressTask.deferDate = nextSat;
+   }
+   if (isTaskAvailable(boxSpringTask)) {
+      boxSpringTask.deferDate = nextSat;
+   }
+   
+   return true;
+}
+
+function isTaskAvailable(t) {
+   return t.taskStatus == Task.Status.Available;  
+}
+
+function isTaskRemaining(t) {
+   return (t.taskStatus == Task.Status.Available || t.taskStatus == Task.Status.Blocked);  
+}
+
+function getLastAction(t) {
+   var lines = t.note.split("\n");
+   var lastLine = lines[lines.length-1];
+   var lastAction = lastLine.split(" ")[1];
+   return lastAction;
+}
+
+function showActions(mattressTask, boxSpringTask, todStart) {
+   if (!isTaskAvailable(mattressTask) && 
+       !isTaskAvailable(boxSpringTask)) {
+      var msg = "No available bed maintenance tasks."; 
+      new Alert("Error", msg).show();
+      console.error(msg);
+      return false;
+   }
+   
+   //Get necessary actions
+   var mattressAction = "None";
+   var boxSpringAction = "None";
+   
+   if (isTaskAvailable(mattressTask)) {
+      if (getLastAction(mattressTask) == "Flip") {
+         mattressAction = "Rotate";
+      }
+      else {
+         mattressAction = "Flip";
+      }
+   }
+   
+   if (isTaskAvailable(boxSpringTask)) {
+      if (getLastAction(boxSpringTask) == "Swap") {
+         boxSpringAction = "Rotate";
+      }
+      else {
+         boxSpringAction = "Swap";
+      }
+   }
+
+   //Setup Alert
+   var alertText = "Mattress: " + mattressAction + "\nBox Spring: " + boxSpringAction;
+   var alert = new Alert("Action Needed", alertText);
+   
+   //iOS and Mac create button order differently
+   var completeButton = -1;
+   if (Device.current.iOS) {
+      alert.addOption("Mark Complete"); 
+      alert.addOption("OK");  
+      completeButton = 0;
+   }
+   else {
+      alert.addOption("OK");  
+      alert.addOption("Mark Complete");
+      completeButton = 1;
+   }
+
+   alert.show(function(result){
+      if (result == completeButton) {
+         //Update notes and mark available tasks complete
+         if (isTaskAvailable(mattressTask)) {
+            mattressTask.note = mattressTask.note + "\n" + 
+                                todStart.toLocaleDateString() + " " + 
+                                mattressAction;
+            mattressTask.markComplete();
+         }
+         
+         if (isTaskAvailable(boxSpringTask)) {
+            boxSpringTask.note = boxSpringTask.note + "\n" + 
+                                todStart.toLocaleDateString() + " " + 
+                                boxSpringAction;
+            boxSpringTask.markComplete();
+         }
+      }
+   }); 
+
+   return true;
+}
