@@ -1,0 +1,18 @@
+{
+   "description": "Project generation templates for OmniFocus", 
+   "author": "Joel Berger", 
+   "actions": [
+      {
+         "image": "scroll.png", 
+         "identifier": "onboarding"
+      }
+   ],
+   "libraries": [
+		{
+			"identifier": "projectTemplatesLib"
+		}
+	],
+   "version": "1.0", 
+   "defaultLocale": "en", 
+   "identifier": "com.joelberger.omnifocus.project-templates-plugin"
+}

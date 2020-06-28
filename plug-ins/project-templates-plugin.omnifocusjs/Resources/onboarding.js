@@ -1,0 +1,177 @@
+//Onboard Resource
+//Create project to onboard new resource
+/* TODO:
+- Add start date error handling?
+- Move templates to files (if possible)
+- VIP tag collision detection?
+*/
+(() => {
+   let action = new PlugIn.Action(function(selection) {
+      let ptLib = this.projectTemplatesLib;
+      let associateTypeVisible = false;
+      let internalTransferVisible = false;
+      let now = new Date();
+      let todayStart = Calendar.current.startOfDay(now);
+      //I'd use this instead, but it produces a time in the date picker on MacOS.
+      //let fmatr = Formatter.Date.withFormat("M/d/yyyy");
+      let fmatr = Formatter.Date.withStyle(Formatter.Date.Style.Short);
+      
+      //Setup form
+		let firstNameInput = new Form.Field.String("firstName", "First Name", null);
+		let lastNameInput = new Form.Field.String("lastName", "Last Name", null);
+      let startDateInput = new Form.Field.Date("startDate", "Date", now, fmatr);
+      //Keyboard selection only available on iOS
+      if (Device.current.iOS) {
+         startDateInput.keyboardType = KeyboardType.NumbersAndPunctuation;
+      }
+      let employeeTypeMenu = new Form.Field.Option(
+         "employeeType",
+		   "Employee Type",
+		   [0, 1],
+		   ["Associate", "Contractor"],
+		   0
+		);
+      let associateTypeMenu = new Form.Field.Option(
+         "associateType",
+		   "Associate Type",
+		   [0, 1],
+		   ["Individual Contributor", "People Leader"],
+		   0
+         );
+      let locationMenu = new Form.Field.Option(
+         "location",
+		   "Location",
+		   [0, 1],
+		   ["Onsite", "Offshore"],
+		   0
+         );   
+      let internalTransferCheckbox = new Form.Field.Checkbox("internalTransfer", "Internal Transfer", false);
+		
+      let inputForm = new Form();
+      inputForm.addField(firstNameInput);
+      inputForm.addField(lastNameInput);
+      inputForm.addField(startDateInput);
+      inputForm.addField(employeeTypeMenu);
+      inputForm.addField(associateTypeMenu);
+      associateTypeVisible = true;
+      inputForm.addField(locationMenu);
+      inputForm.addField(internalTransferCheckbox);
+      internalTransferVisible = true;
+      let formPrompt = "Create Onboarding Project";
+      let buttonTitle = "Continue";
+      let formPromise = inputForm.show(formPrompt,buttonTitle);
+		
+      inputForm.validate = function(formObject) {
+         let employeeTypeIndex = formObject.values["employeeType"];
+         let locationIndex = formObject.values["location"];
+      
+         //Remove Associate Type field based upon Employee Type selection
+         if (employeeTypeIndex == 1 && associateTypeVisible) {
+            inputForm.removeField(inputForm.fields[ptLib.getFormFieldIndex(inputForm, "associateType")]);
+            associateTypeVisible = false;
+         } 
+         //Display the Associate Type field if Associate is the Employee Type
+         else if (employeeTypeIndex == 0 && !associateTypeVisible) {
+            let associateTypeMenu = new Form.Field.Option(
+               "associateType",
+               "Associate Type",
+               [0, 1],
+               ["Individual Contributor", "People Leader"],
+               0
+               );
+            inputForm.addField(associateTypeMenu, ptLib.getFormFieldIndex(inputForm, "employeeType")+1);
+            associateTypeVisible = true;
+         } 
+      
+         //Remove Internal Transfer field based upon Location selection
+         if (locationIndex == 1 && internalTransferVisible) {
+            inputForm.removeField(inputForm.fields[ptLib.getFormFieldIndex(inputForm, "internalTransfer")]);
+            internalTransferVisible = false;
+         } 
+         //Display the Internal Transfer field if Location is Onsite
+         else if (locationIndex == 0 && !internalTransferVisible) {
+            let internalTransferCheckbox = new Form.Field.Checkbox("internalTransfer", "Internal Transfer", false);
+            inputForm.addField(internalTransferCheckbox, ptLib.getFormFieldIndex(inputForm, "location")+1);
+            internalTransferVisible = true;
+         } 
+      
+         if (!formObject.values["firstName"] || !formObject.values["lastName"]) {
+		      throw "First and Last Names are required" 
+         }
+         
+         return true;
+		}
+		
+      formPromise.then(function(formObject) {
+			//Get form content
+			let employeeFirstName = formObject.values["firstName"];
+			let employeeName = formObject.values["firstName"] + " " + formObject.values["lastName"];
+         let startDate8601 = formObject.values["startDate"].toISOString().substring(0,10);
+         let employeeTypeIndex = formObject.values["employeeType"];
+         let associateTypeIndex = formObject.values["associateType"];
+         let locationIndex = formObject.values["location"];
+			let internalTransfer = formObject.values["internalTransfer"];    
+         
+         //Build project template
+         let projectTemplate = ptLib.getTemplateContent("Onboarding Base");  
+         if (employeeTypeIndex == 0) {
+            projectTemplate = projectTemplate + "\n" + 
+                              ptLib.getTemplateContent("Onboarding Associate");
+            if (associateTypeIndex == 1) {
+               projectTemplate = projectTemplate + "\n" +
+                                 ptLib.getTemplateContent("Onboarding People Leader");            
+            }
+         }
+         if (locationIndex == 0) {
+            projectTemplate = projectTemplate + "\n" + 
+                              ptLib.getTemplateContent("Onboarding Onsite");
+            if (employeeTypeIndex == 1) {
+               projectTemplate = projectTemplate + "\n" + 
+                                 ptLib.getTemplateContent("Onboarding Onsite Contractor");
+            }
+            if (!internalTransfer) {
+               projectTemplate = projectTemplate + "\n" + 
+                                 ptLib.getTemplateContent("Onboarding Onsite Not Internal Transfer");
+            }
+         }
+         
+         //Create named tag within VIP tag group (if associate)
+         if (employeeTypeIndex == 0) {
+            new Tag(employeeFirstName, tagNamed("VIP"));
+         }
+         
+         //Populate template with form values
+         projectTemplate = ptLib.removeCommentLines(projectTemplate);
+         projectTemplate = ptLib.populateTemplateParameter(projectTemplate, "Name", employeeName);
+         projectTemplate = ptLib.populateTemplateParameter(projectTemplate, "Start Date", startDate8601);
+        
+         //Create project (URL scheme doesn't reflect changes so creating in advance for sort to work)
+         let projectName = employeeName + " Onboarding";
+         let workFolder = folderNamed("Work");
+         let proj = new Project(projectName, workFolder);
+         proj.deferDate = todayStart;
+         proj.completedByChildren = true;
+         
+         //Create project leveraging TaskPaper bridge
+         let encodedProjectTemplate = encodeURIComponent(projectTemplate);
+         let encodedProjectName = encodeURIComponent(projectName);
+		   let urlStr = "omnifocus:///paste?target=/task/" + encodedProjectName + "&content=" + encodedProjectTemplate;
+		   URL.fromString(urlStr).open();
+         
+         //Cleanup
+         PlugIn.find("com.joelberger.omnifocus.sort-plugin").action("sortProjects").perform();
+         PlugIn.find("com.joelberger.omnifocus.sort-plugin").action("sortTags").perform();
+      });
+
+		formPromise.catch(function(err){
+			console.error("Form cancelled", err.message);
+		});	
+   });
+
+    
+	action.validate = function(selection, sender) {
+		return true;
+	};
+        
+	return action;
+})();
