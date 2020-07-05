@@ -7,7 +7,7 @@
        
       projectTemplatesLib.removeCommentLines = function(template) {
          //Remove lines starting with #
-         let regex = new RegExp("^#.*\n", "mg");
+         let regex = new RegExp("^\\s*#.*\(?:\n|$)", "mg");
          return template.replace(regex, '');
       }
 
@@ -88,11 +88,64 @@
             - Request ID badge for <<Name>> @due(<<Start Date>> 23:55 -2d)
             https://vmrintweb01.corp.alldata.net/Retail/AccessRequest.aspx`;
 
-         const onboardingOnsiteNotInternalTransfer =
-         `## Onboarding Template: Onsite Not Internal Transfer
+         const onboardingOnsiteArriving =
+         `## Onboarding Template: Onsite Arriving
             - Request Skype headset for <<Name>> @tags(Mary Jo)
             - Order laptop for <<Name>> @tags(Mary Jo)`;
+            
+         const offboardingBase =
+         `## Offboarding Template: Base
+         ## <<Name>> Offboarding @autodone(true) @defer(today 00:00)
+            - Remove <<Name>> from timesheet tracker`;
 
+         const offboardingAssociate = 
+         `## Offboarding Template: Associate
+            - Write personnel announcement for <<Name>> @due(<<Term Date>> 23:55)
+            - Send HR termination letter for <<Name>> @due(<<Term Date>> 23:55)
+            - Ask Mary Jo to send personnel announcement for <<Name>> @tags(Mary Jo) @due(<<Term Date>> 23:55)
+            - Cancel 1:1s with <<Name>> @defer(<<Term Date>> 00:00 +mon)
+            - Cancel 2020s with <<Name>> @defer(<<Term Date>> 00:00 +mon)
+            - Remove 1:1 and 2020 time tracking entries from Airtable for <<Name>> @defer(<<Term Date>> 00:00 +mon) 
+            - Remove <<Name>> from team meetings @defer(<<Term Date>> 00:00 +mon)
+            - Drop <<Name>> VIP tag in OmniFocus @defer(<<Term Date>> 00:00 +mon)
+            - Schedule going away lunch for <<Name>>
+            - Remove <<Name>> from OmniFocus Performance Cycle template
+            omnifocus:///task/iCjW7qrw1js`;
+          
+         const offboardingPeopleLeader = 
+         `## Offboarding Template: People Leader
+            - Remove <<Name>> from leadership meeting @defer(<<Term Date>> 00:00 +mon)
+            - Remove <<Name>> from leadership lunch/happy hour @defer(<<Term Date>> 00:00 +mon)`;
+                     
+         const offboardingContractor = 
+         `## Offboarding Template: Contractor
+            - Inform Mary Jo of <<Name>>'s termination @tags(Mary Jo) @defer(<<Term Date>> 00:00 +mon)`;
+      
+         const offboardingInternalTransfer = 
+         `## Offboarding Template: Internal Transfer
+            - Transfer <<Name>> in Peoplesoft/Changepoint to new manager with start date of <<Term Date>>
+            - Reassign <<Name>>'s manager in Changepoint`;
+          
+         const offboardingAssociateInternalTransfer = 
+         `## Offboarding Template: Associate Internal Transfer
+            - Send new manager <<Name>>'s PTO`;
+        
+         const offboardingContractorInternalTransfer =
+         `## Offboarding Template: Contractor Internal Transfer
+            - Request reporting structure change in Fieldglass for <<Name>> @defer(<<Term Date>> 00:00)`;
+         
+         const offboardingDeparting =
+         `## Offboarding Template: Departing
+            - Terminate <<Name>> in Peoplesoft/Fieldglass with an end date of <<Term Date>>
+            - Remove <<Name>> from Changepoint @defer(<<Term Date>> 00:00 +mon)`; 
+       
+         const offboardingOnsite = 
+         `## Offboarding Template: Onsite
+            - Return <<Name>>'s ID badge to security desk @defer(<<Term Date>> 00:00)
+            - Return <<Name>>'s laptop and monitor @defer(<<Term Date>> 00:00 +mon)`;
+
+
+            
          //Select appropriate template
          switch(templateName) {
             case "Onboarding Base":
@@ -110,9 +163,36 @@
             case "Onboarding Onsite Contractor":
                templateContent = onboardingOnsiteContractor;
                break;
-            case "Onboarding Onsite Not Internal Transfer":
-               templateContent = onboardingOnsiteNotInternalTransfer;
+            case "Onboarding Onsite Arriving":
+               templateContent = onboardingOnsiteArriving;
                break;
+            case "Offboarding Base":
+               templateContent = offboardingBase;
+               break;  
+            case "Offboarding Associate":
+               templateContent = offboardingAssociate;
+               break;
+            case "Offboarding People Leader":
+               templateContent = offboardingPeopleLeader;
+               break;
+            case "Offboarding Contractor":
+               templateContent = offboardingContractor;
+               break; 
+            case "Offboarding Internal Transfer":
+               templateContent = offboardingInternalTransfer;
+               break; 
+            case "Offboarding Associate Internal Transfer":
+               templateContent = offboardingAssociateInternalTransfer;
+               break; 
+            case "Offboarding Contractor Internal Transfer":
+               templateContent = offboardingContractorInternalTransfer;
+               break;   
+            case "Offboarding Departing":
+               templateContent = offboardingDeparting;
+               break; 
+            case "Offboarding Onsite":
+               templateContent = offboardingOnsite;
+               break;        
             default:
                templateContent = "***TEMPLATE NOT FOUND***";
          }

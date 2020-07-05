@@ -3,8 +3,12 @@
    "author": "Joel Berger", 
    "actions": [
       {
-         "image": "scroll.png", 
+         "image": "code.png", 
          "identifier": "onboarding"
+      },
+      {
+         "image": "code.png", 
+         "identifier": "offboarding"
       }
    ],
    "libraries": [

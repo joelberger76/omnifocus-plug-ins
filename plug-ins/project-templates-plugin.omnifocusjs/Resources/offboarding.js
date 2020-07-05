@@ -1,15 +1,13 @@
-//Onboard Resource
-//Create project to onboard new resource
+//Offboard Resource
+//Create project to offboard resource
 /* TODO:
-- Add start date error handling?
+- Add term date error handling?
 - Move templates to files (if possible)
-- VIP tag collision detection?
 */
 (() => {
    let action = new PlugIn.Action(function(selection) {
       let ptLib = this.projectTemplatesLib;
       let associateTypeVisible = false;
-      let internalTransferVisible = false;
       let now = new Date();
       let todayStart = Calendar.current.startOfDay(now);
       //I'd use this instead, but it produces a time in the date picker on MacOS.
@@ -19,10 +17,10 @@
       //Setup form
 		let firstNameInput = new Form.Field.String("firstName", "First Name", null);
 		let lastNameInput = new Form.Field.String("lastName", "Last Name", null);
-      let startDateInput = new Form.Field.Date("startDate", "Date", now, fmatr);
+      let termDateInput = new Form.Field.Date("termDate", "Date", now, fmatr);
       //Keyboard selection only available on iOS
       if (Device.current.iOS) {
-         startDateInput.keyboardType = KeyboardType.NumbersAndPunctuation;
+         termDateInput.keyboardType = KeyboardType.NumbersAndPunctuation;
       }
       let employeeTypeMenu = new Form.Field.Option(
          "employeeType",
@@ -50,14 +48,13 @@
       let inputForm = new Form();
       inputForm.addField(firstNameInput);
       inputForm.addField(lastNameInput);
-      inputForm.addField(startDateInput);
+      inputForm.addField(termDateInput);
       inputForm.addField(employeeTypeMenu);
       inputForm.addField(associateTypeMenu);
       associateTypeVisible = true;
       inputForm.addField(locationMenu);
       inputForm.addField(internalTransferCheckbox);
-      internalTransferVisible = true;
-      let formPrompt = "Create Onboarding Project";
+      let formPrompt = "Create Offboarding Project";
       let buttonTitle = "Continue";
       let formPromise = inputForm.show(formPrompt,buttonTitle);
 		
@@ -83,18 +80,6 @@
             associateTypeVisible = true;
          } 
       
-         //Remove Internal Transfer field based upon Location selection
-         if (locationIndex == 1 && internalTransferVisible) {
-            inputForm.removeField(inputForm.fields[ptLib.getFormFieldIndex(inputForm, "internalTransfer")]);
-            internalTransferVisible = false;
-         } 
-         //Display the Internal Transfer field if Location is Onsite
-         else if (locationIndex == 0 && !internalTransferVisible) {
-            let internalTransferCheckbox = new Form.Field.Checkbox("internalTransfer", "Internal Transfer", false);
-            inputForm.addField(internalTransferCheckbox, ptLib.getFormFieldIndex(inputForm, "location")+1);
-            internalTransferVisible = true;
-         } 
-      
          if (!formObject.values["firstName"] || !formObject.values["lastName"]) {
 		      throw "First and Last Names are required" 
          }
@@ -106,48 +91,57 @@
 			//Get form content
 			let employeeFirstName = formObject.values["firstName"];
 			let employeeName = formObject.values["firstName"] + " " + formObject.values["lastName"];
-         let startDate8601 = formObject.values["startDate"].toISOString().substring(0,10);
+         let termDate8601 = formObject.values["termDate"].toISOString().substring(0,10);
          let employeeTypeIndex = formObject.values["employeeType"];
          let associateTypeIndex = formObject.values["associateType"];
          let locationIndex = formObject.values["location"];
 			let internalTransfer = formObject.values["internalTransfer"];    
          
          //Build project template
-         let projectTemplate = ptLib.getTemplateContent("Onboarding Base");  
+         let projectTemplate = ptLib.getTemplateContent("Offboarding Base");  
          if (employeeTypeIndex == 0) {
             projectTemplate = projectTemplate + "\n" + 
-                              ptLib.getTemplateContent("Onboarding Associate");
+                              ptLib.getTemplateContent("Offboarding Associate");
             if (associateTypeIndex == 1) {
                projectTemplate = projectTemplate + "\n" +
-                                 ptLib.getTemplateContent("Onboarding People Leader");            
+                                 ptLib.getTemplateContent("Offboarding People Leader");            
+            }
+         }
+         else {
+            projectTemplate = projectTemplate + "\n" +
+                              ptLib.getTemplateContent("Offboarding Contractor");
+         }
+         
+         if (!internalTransfer) {
+            projectTemplate = projectTemplate + "\n" +
+                              ptLib.getTemplateContent("Offboarding Departing");         
+         }
+         else {
+            projectTemplate = projectTemplate + "\n" +
+                              ptLib.getTemplateContent("Offboarding Internal Transfer");
+            if (employeeTypeIndex == 0) {
+               projectTemplate = projectTemplate + "\n" +
+                                 ptLib.getTemplateContent("Offboarding Associate Internal Transfer");
+            }
+            else {
+               projectTemplate = projectTemplate + "\n" +
+                                 ptLib.getTemplateContent("Offboarding Contractor Internal Transfer");
             }
          }
          
          if (locationIndex == 0) {
             projectTemplate = projectTemplate + "\n" + 
-                              ptLib.getTemplateContent("Onboarding Onsite");
-            if (employeeTypeIndex == 1) {
-               projectTemplate = projectTemplate + "\n" + 
-                                 ptLib.getTemplateContent("Onboarding Onsite Contractor");
-            }
-            if (!internalTransfer) {
-               projectTemplate = projectTemplate + "\n" + 
-                                 ptLib.getTemplateContent("Onboarding Onsite Arriving");
-            }
+                              ptLib.getTemplateContent("Offboarding Onsite");
          }
          
-         //Create named tag within VIP tag group (if associate)
-         if (employeeTypeIndex == 0) {
-            new Tag(employeeFirstName, tagNamed("VIP"));
-         }
          
          //Populate template with form values
          projectTemplate = ptLib.removeCommentLines(projectTemplate);
          projectTemplate = ptLib.populateTemplateParameter(projectTemplate, "Name", employeeName);
-         projectTemplate = ptLib.populateTemplateParameter(projectTemplate, "Start Date", startDate8601);
+         projectTemplate = ptLib.populateTemplateParameter(projectTemplate, "Term Date", termDate8601);
         
          //Create project (URL scheme doesn't reflect changes so creating in advance for sort to work)
-         let projectName = employeeName + " Onboarding";
+         let projectName = employeeName + " Offboarding";
          let workFolder = folderNamed("Work");
          let proj = new Project(projectName, workFolder);
          proj.deferDate = todayStart;
@@ -161,7 +155,6 @@
          
          //Cleanup
          PlugIn.find("com.joelberger.omnifocus.sort-plugin").action("sortProjects").perform();
-         PlugIn.find("com.joelberger.omnifocus.sort-plugin").action("sortTags").perform();
       });
 
 		formPromise.catch(function(err){
