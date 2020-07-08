@@ -3,7 +3,7 @@
 /* TODO:
 - Add start date error handling?
 - Move templates to files (if possible)
-- VIP tag collision detection?
+- VIP tag collision handling?
 */
 (() => {
    let action = new PlugIn.Action(function(selection) {
@@ -137,8 +137,17 @@
          }
          
          //Create named tag within VIP tag group (if associate)
+         let handleVIPTag = false;
          if (employeeTypeIndex == 0) {
+            if (flattenedTags.filter((tag) => tag.name === employeeFirstName)[0]) {
+               new Alert("Warning", "A tag named " + employeeFirstName + " already exists.\n\nConsider:\n1) Making tag names unique\n2) Running \"Update VIPs\" shortcut on iOS").show();
+            }
+            else {
+               handleVIPTag = true;
+            }
+         
             new Tag(employeeFirstName, tagNamed("VIP"));
+            save();
          }
          
          //Populate template with form values
@@ -162,6 +171,17 @@
          //Cleanup
          PlugIn.find("com.joelberger.omnifocus.sort-plugin").action("sortProjects").perform();
          PlugIn.find("com.joelberger.omnifocus.sort-plugin").action("sortTags").perform();
+         
+         //Update Data Jar VIP tags (if associate)
+         if (handleVIPTag) {
+            if (Device.current.iOS) {
+               let updateVipURL = "shortcuts://x-callback-url/run-shortcut?name=Update%20VIPs&x-success=omnifocus%3A%2F%2F";
+               URL.fromString(updateVipURL).open();
+            }
+            else {
+               new Alert("Reminder", "Remember to run \"Update VIPs\" shortcut on iOS.").show();
+            }
+         }
       });
 
 		formPromise.catch(function(err){
