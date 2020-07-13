@@ -1,14 +1,6 @@
 //Calibrate Review Dates
-/*{
-   "type": "action",
-   "targets": ["omnifocus"],
-   "author": "Joel Berger",
-   "identifier": "com.joelberger.omnifocus.calibrate-review-dates",
-   "version": "1.0",
-   "description": "Calibrate project review dates to include projects coming up for review within the next week.",
-   "label": "Calibrate Review Dates",
-   "shortLabel": "Calibrate Review Dates"
-}*/
+//Calibrate project review dates to include projects coming up for review 
+//within the next week.
 (() => {
    var action = new PlugIn.Action(function(selection, sender){
       // action code
