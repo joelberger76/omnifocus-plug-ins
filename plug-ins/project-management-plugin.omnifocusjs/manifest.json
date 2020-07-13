@@ -1,0 +1,21 @@
+{
+   "description": "Management and maintenance of OmniFocus projects", 
+   "author": "Joel Berger", 
+   "actions": [
+      {
+         "image": "calibrateReviewDates.png", 
+         "identifier": "calibrateReviewDates"
+      }, 
+      {
+         "image": "createWorkProject.png", 
+         "identifier": "createWorkProject"
+      }, 
+      {
+         "image": "completeWorkProject.png", 
+         "identifier": "completeWorkProject"
+      }
+   ], 
+   "version": "1.0", 
+   "defaultLocale": "en", 
+   "identifier": "com.joelberger.omnifocus.project-management-plugin"
+}
