@@ -92,7 +92,8 @@ function completeProject(projName) {
 	folderNamed("Work").projectNamed(projName).status = Project.Status.Done;
          
    //Archive project in Toggl
-   let urlStr = "https://hook.integromat.com/gxj8uxqrwem4gti6msyqydsh5l8xvm6c?action=archive&project=";
+   let webhookURL = folderNamed("Maintenance").projectNamed("Plug-In Configuration").taskNamed("Toggl Project Webhook").note;
+   let urlStr = webhookURL + "?action=archive&project=";
    let encodedProjectName = encodeURIComponent(projName);
    //Use fetch instead of open to avoid spawning a browser window
    //Callback function is required
