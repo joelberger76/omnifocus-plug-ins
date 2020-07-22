@@ -114,7 +114,11 @@
          
          if (!internalTransfer) {
             projectTemplate = projectTemplate + "\n" +
-                              ptLib.getTemplateContent("Offboarding Departing");         
+                              ptLib.getTemplateContent("Offboarding Departing");
+            if (employeeTypeIndex == 0) {
+               projectTemplate = projectTemplate + "\n" +
+                                 ptLib.getTemplateContent("Offboarding Associate Departing");
+            }
          }
          else {
             projectTemplate = projectTemplate + "\n" +

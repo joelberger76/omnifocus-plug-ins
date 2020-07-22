@@ -101,7 +101,6 @@
          const offboardingAssociate = 
          `## Offboarding Template: Associate
             - Write personnel announcement for <<Name>> @due(<<Term Date>> 23:55)
-            - Send HR termination letter for <<Name>> @due(<<Term Date>> 23:55)
             - Ask Mary Jo to send personnel announcement for <<Name>> @tags(Mary Jo) @due(<<Term Date>> 23:55)
             - Cancel 1:1s with <<Name>> @defer(<<Term Date>> 00:00 +mon)
             - Cancel 2020s with <<Name>> @defer(<<Term Date>> 00:00 +mon)
@@ -137,8 +136,12 @@
          const offboardingDeparting =
          `## Offboarding Template: Departing
             - Terminate <<Name>> in Peoplesoft/Fieldglass with an end date of <<Term Date>>
-            - Remove <<Name>> from Changepoint @defer(<<Term Date>> 00:00 +mon)`; 
-       
+            - Remove <<Name>> from Changepoint @defer(<<Term Date>> 00:00 +mon)`;
+            
+         const offboardingAssociateDeparting =
+         `## Offboarding Template: Associate Departing
+            - Send HR termination letter for <<Name>> @due(<<Term Date>> 23:55)`;
+            
          const offboardingOnsite = 
          `## Offboarding Template: Onsite
             - Return <<Name>>'s ID badge to security desk @defer(<<Term Date>> 00:00)
@@ -189,6 +192,9 @@
                break;   
             case "Offboarding Departing":
                templateContent = offboardingDeparting;
+               break; 
+            case "Offboarding Associate Departing":
+               templateContent = offboardingAssociateDeparting;
                break; 
             case "Offboarding Onsite":
                templateContent = offboardingOnsite;
