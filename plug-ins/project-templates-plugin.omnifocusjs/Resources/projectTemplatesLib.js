@@ -52,7 +52,7 @@
 
          const onboardingAssociate =
          `## Onboarding Template: Associate
-            - Add <<Name>> to PTO tracker
+            - Add <<Name>> to PTO tracker with a start date of <<Start Date>>
             - Add <<Name>>'s birthday to OmniFocus Events project
             - Update <<Name>>'s contact record with their birthday
             - Write personnel announcement for <<Name>> @due(<<Start Date>> 23:55)
@@ -96,7 +96,7 @@
          const offboardingBase =
          `## Offboarding Template: Base
          ## <<Name>> Offboarding @autodone(true) @defer(today 00:00)
-            - Remove <<Name>> from timesheet tracker`;
+            - Remove <<Name>> from timesheet tracker with an end date of <<Term Date>>`;
 
          const offboardingAssociate = 
          `## Offboarding Template: Associate
