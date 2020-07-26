@@ -161,6 +161,9 @@
          let proj = new Project(projectName, workFolder);
          proj.deferDate = todayStart;
          proj.completedByChildren = true;
+         let dc = new DateComponents();
+         dc.day = 90;
+         proj.nextReviewDate = Calendar.current.dateByAddingDateComponents(todayStart, dc);
          
          //Create project leveraging TaskPaper bridge
          let encodedProjectTemplate = encodeURIComponent(projectTemplate);
