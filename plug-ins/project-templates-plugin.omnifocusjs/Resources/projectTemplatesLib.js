@@ -81,7 +81,8 @@
             - Request nameplate for <<Name>> @tags(Mary Jo)
             - Exchange mobile numbers with <<Name>> @defer(<<Start Date>> 00:00)
             - Introduce <<Name>> to team @defer(<<Start Date>> 00:00) @due(<<Start Date>> 23:55)
-            - Develop onboarding plan for <<Name>>`;
+            - Develop onboarding plan for <<Name>>
+            - Inform Randy of <<Name>>'s hiring @tags(Randy)`;
    
          const onboardingOnsiteContractor =
          `## Onboarding Template: Onsite Contractor
@@ -145,10 +146,9 @@
          const offboardingOnsite = 
          `## Offboarding Template: Onsite
             - Return <<Name>>'s ID badge to security desk @defer(<<Term Date>> 00:00)
-            - Return <<Name>>'s laptop and monitor @defer(<<Term Date>> 00:00 +mon)`;
+            - Return <<Name>>'s laptop and monitor @defer(<<Term Date>> 00:00 +mon)
+            - Inform Randy of <<Name>>'s departure, discuss impact and options @tags(Randy)`;
 
-
-            
          //Select appropriate template
          switch(templateName) {
             case "Onboarding Base":
