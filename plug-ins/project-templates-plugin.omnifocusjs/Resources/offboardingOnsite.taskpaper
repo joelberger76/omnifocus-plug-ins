@@ -1,0 +1,6 @@
+## Offboarding Template: Onsite
+   - Return <<Name>>'s ID badge to security desk @defer(<<Term Date>> 00:00)
+   - Return <<Name>>'s laptop and monitor @defer(<<Term Date>> 00:00 +mon)
+   - Inform Randy of <<Name>>'s departure, discuss impact and options @tags(Randy)
+   - Inform critical team members of <<Name>>'s departure
+     Consider Scrum Master, Tech Lead, Peers (if People Leader)

@@ -1,0 +1,3 @@
+## Offboarding Template: Base
+## <<Name>> Offboarding @autodone(true) @defer(today 00:00)
+   - Remove <<Name>> from timesheet tracker with an end date of <<Term Date>>

@@ -1,24 +1,23 @@
-//Offboard Resource
-//Create project to offboard resource
+// Offboard Resource
+// Create project to offboard resource
 /* TODO:
 - Add term date error handling?
-- Move templates to files (if possible)
 */
 (() => {
-   let action = new PlugIn.Action(function(selection) {
+   let action = new PlugIn.Action(async function(selection) {
       let ptLib = this.projectTemplatesLib;
       let associateTypeVisible = false;
       let now = new Date();
       let todayStart = Calendar.current.startOfDay(now);
-      //I'd use this instead, but it produces a time in the date picker on MacOS.
-      //let fmatr = Formatter.Date.withFormat("M/d/yyyy");
+      // I'd use this instead, but it produces a time in the date picker on MacOS.
+      // let fmatr = Formatter.Date.withFormat("M/d/yyyy");
       let fmatr = Formatter.Date.withStyle(Formatter.Date.Style.Short);
       
-      //Setup form
+      // Setup form
 		let firstNameInput = new Form.Field.String("firstName", "First Name", null);
 		let lastNameInput = new Form.Field.String("lastName", "Last Name", null);
       let termDateInput = new Form.Field.Date("termDate", "Date", now, fmatr);
-      //Keyboard selection only available on iOS
+      // Keyboard selection only available on iOS
       if (Device.current.iOS) {
          termDateInput.keyboardType = KeyboardType.NumbersAndPunctuation;
       }
@@ -62,12 +61,12 @@
          let employeeTypeIndex = formObject.values["employeeType"];
          let locationIndex = formObject.values["location"];
       
-         //Remove Associate Type field based upon Employee Type selection
+         // Remove Associate Type field based upon Employee Type selection
          if (employeeTypeIndex == 1 && associateTypeVisible) {
             inputForm.removeField(inputForm.fields[ptLib.getFormFieldIndex(inputForm, "associateType")]);
             associateTypeVisible = false;
          } 
-         //Display the Associate Type field if Associate is the Employee Type
+         // Display the Associate Type field if Associate is the Employee Type
          else if (employeeTypeIndex == 0 && !associateTypeVisible) {
             let associateTypeMenu = new Form.Field.Option(
                "associateType",
@@ -87,7 +86,7 @@
          return true;
 		}
 		
-      formPromise.then(function(formObject) {
+      formPromise.then(async function(formObject) {
 			//Get form content
 			let employeeFirstName = formObject.values["firstName"];
 			let employeeName = formObject.values["firstName"] + " " + formObject.values["lastName"];
@@ -98,53 +97,53 @@
 			let internalTransfer = formObject.values["internalTransfer"];    
          
          //Build project template
-         let projectTemplate = ptLib.getTemplateContent("Offboarding Base");  
+         let projectTemplate = await ptLib.getTemplateContent("offboardingBase.taskpaper");
          if (employeeTypeIndex == 0) {
             projectTemplate = projectTemplate + "\n" + 
-                              ptLib.getTemplateContent("Offboarding Associate");
+                              await ptLib.getTemplateContent("offboardingAssociate.taskpaper");
             if (associateTypeIndex == 1) {
                projectTemplate = projectTemplate + "\n" +
-                                 ptLib.getTemplateContent("Offboarding People Leader");            
+                                 await ptLib.getTemplateContent("offboardingPeopleLeader.taskpaper");           
             }
          }
          else {
             projectTemplate = projectTemplate + "\n" +
-                              ptLib.getTemplateContent("Offboarding Contractor");
+                              await ptLib.getTemplateContent("offboardingContractor.taskpaper");
          }
          
          if (!internalTransfer) {
             projectTemplate = projectTemplate + "\n" +
-                              ptLib.getTemplateContent("Offboarding Departing");
+                              await ptLib.getTemplateContent("offboardingDeparting.taskpaper");
             if (employeeTypeIndex == 0) {
                projectTemplate = projectTemplate + "\n" +
-                                 ptLib.getTemplateContent("Offboarding Associate Departing");
+                                 await ptLib.getTemplateContent("offboardingAssociateDeparting.taskpaper");
             }
          }
          else {
             projectTemplate = projectTemplate + "\n" +
-                              ptLib.getTemplateContent("Offboarding Internal Transfer");
+                              await ptLib.getTemplateContent("offboardingInternalTransfer.taskpaper");
             if (employeeTypeIndex == 0) {
                projectTemplate = projectTemplate + "\n" +
-                                 ptLib.getTemplateContent("Offboarding Associate Internal Transfer");
+                                 await ptLib.getTemplateContent("offboardingAssociateInternalTransfer.taskpaper");
             }
             else {
                projectTemplate = projectTemplate + "\n" +
-                                 ptLib.getTemplateContent("Offboarding Contractor Internal Transfer");
+                                 await ptLib.getTemplateContent("offboardingContractorInternalTransfer.taskpaper");
             }
          }
          
          if (locationIndex == 0) {
             projectTemplate = projectTemplate + "\n" + 
-                              ptLib.getTemplateContent("Offboarding Onsite");
+                              await ptLib.getTemplateContent("offboardingOnsite.taskpaper");
          }
          
          
-         //Populate template with form values
+         // Populate template with form values
          projectTemplate = ptLib.removeCommentLines(projectTemplate);
          projectTemplate = ptLib.populateTemplateParameter(projectTemplate, "Name", employeeName);
          projectTemplate = ptLib.populateTemplateParameter(projectTemplate, "Term Date", termDate8601);
         
-         //Create project (URL scheme doesn't reflect changes so creating in advance for sort to work)
+         // Create project (URL scheme doesn't reflect changes so creating in advance for sort to work)
          let projectName = employeeName + " Offboarding";
          let workFolder = folderNamed("Work");
          let proj = new Project(projectName, workFolder);
@@ -154,13 +153,13 @@
          dc.day = 90;
          proj.nextReviewDate = Calendar.current.dateByAddingDateComponents(todayStart, dc);
          
-         //Create project leveraging TaskPaper bridge
+         // Create project leveraging TaskPaper bridge
          let encodedProjectTemplate = encodeURIComponent(projectTemplate);
          let encodedProjectName = encodeURIComponent(projectName);
 		   let urlStr = "omnifocus:///paste?target=/task/" + encodedProjectName + "&content=" + encodedProjectTemplate;
 		   URL.fromString(urlStr).open();
          
-         //Cleanup
+         // Cleanup
          PlugIn.find("com.joelberger.omnifocus.sort-plugin").action("sortProjects").perform();
       });
 
