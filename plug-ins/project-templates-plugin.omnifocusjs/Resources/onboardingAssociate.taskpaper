@@ -2,8 +2,7 @@
    - Add <<Name>> to PTO tracker with a start date of <<Start Date>>
    - Add <<Name>>'s birthday to OmniFocus Events project
    - Update <<Name>>'s contact record with their birthday
-   - Write personnel announcement for <<Name>> @due(<<Start Date>> 23:55)
-   - Ask Mary Jo to send personnel announcement for <<Name>> @tags(Mary Jo) @defer(<<Start Date>> 00:00) @due(<<Start Date>> 23:55)
+   - Send personnel announcement for <<Name>> @due(<<Start Date>> 23:55)
    - Schedule 1:1s with <<Name>> @defer(<<Start Date>> 00:00)
    - Schedule 2020s with <<Name>> @defer(<<Start Date>> 00:00)
    - Add 1:1 and 2020 time tracking entries to Airtable for <<Name>> @defer(<<Start Date>> 00:00)

@@ -142,6 +142,13 @@
          projectTemplate = ptLib.removeCommentLines(projectTemplate);
          projectTemplate = ptLib.populateTemplateParameter(projectTemplate, "Name", employeeName);
          projectTemplate = ptLib.populateTemplateParameter(projectTemplate, "Term Date", termDate8601);
+         
+         // Check if first name tag exists in OmniFocus
+         let templateValue = "";
+         if (flattenedTags.filter((tag) => tag.name === employeeFirstName)[0]) {
+            templateValue = employeeFirstName; 
+         }
+         projectTemplate = ptLib.populateTemplateParameter(projectTemplate, "First Name", templateValue);
         
          // Create project (URL scheme doesn't reflect changes so creating in advance for sort to work)
          let projectName = employeeName + " Offboarding";
