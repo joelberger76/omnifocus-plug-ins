@@ -1,3 +1,4 @@
 ## Offboarding Template: Departing
    - Terminate <<Name>> in Workday/Fieldglass with an end date of <<Term Date>>
    - Remove <<Name>> from Changepoint @defer(<<Term Date>> 00:00 +mon)
+   https://adcs.service-now.com/sp?id=sc_cat_item&sys_id=8f973018dbc3b280674038ff9d96192a
