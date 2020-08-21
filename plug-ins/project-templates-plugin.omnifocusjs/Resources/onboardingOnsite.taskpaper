@@ -1,8 +1,5 @@
 ## Onboarding Template: Onsite
    - Determine seating for <<Name>>
-   - Request VPN access for <<Name>> @tags(Mary Jo)
-     https://adcs.service-now.com/sp/?id=sc_cat_item&sys_id=3c7a3011db1853404e1c38ff9d 961920
-     Cost Center: 17-222-722-800
    - Request nameplate for <<Name>> @tags(Mary Jo)
    - Exchange mobile numbers with <<Name>> @defer(<<Start Date>> 00:00)
    - Introduce <<Name>> to team @defer(<<Start Date>> 00:00) @due(<<Start Date>> 23:55)
