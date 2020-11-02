@@ -6,6 +6,4 @@
    - Remove <<Name>> from team meetings @defer(<<Term Date>> 00:00 +mon)
    - Drop <<Name>> VIP tag in OmniFocus @defer(<<Term Date>> 00:00 +mon)
    - Schedule going away lunch for <<Name>>
-   - Remove <<Name>> from OmniFocus Performance Cycle template
-   omnifocus:///task/iCjW7qrw1js
    - Develop transition plan with <<Name>> @due(<<Term Date>> 23:55 -7d) @tags(<<First Name>>)

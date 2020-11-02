@@ -1,0 +1,26 @@
+## <<Cycle>> Performance Cycle @parallel(true) @autodone(true) @due(<<End Date>> 23:55) @defer(<<Start Date>> 00:00)
+   - Communicate key process dates to team @due(<<Start Date>> 23:55 +2d)
+   * Self-assessments due: <<Self-Assessment Date>>
+   * Calibration: <<Calibration Date>>
+   * Performance review conversations completed: <<End Date>>
+   - Gather <<Cycle>> Feedback @parallel(false) @autodone(true) @due(<<Calibration Date>> 23:55)
+      - Get feedback participants from team @due(<<Start Date>> 23:55 +1w)
+      - Send out feedback request for team @due(<<Start Date>> 23:55 +8d)
+      - Review team feedback @defer(<<Start Date>> 00:00 +24d)
+   - <<Cycle>> Self-Assessment @parallel(false) @autodone(true) @due(<<Self-Assessment Date>> 23:55
+      - Schedule time to write <<Cycle>> self-assessment
+      - Write <<Cycle>> self-assessment @due(<<Self-Assessment Date>> 23:55) @defer(<<Self-Assessment Date>> 00:00 -2w)
+      - Confirm <<Cycle>> self-assessments are completed @defer(<<Self-Assessment Date>> 00:00)
+   - <<Cycle>> Calibration @parallel(false) @autodone(true) @defer(<<Start Date>> 00:00) @due(<<Calibration Date>> 23:55)
+      - Schedule <<Cycle>> calibration session
+      - Send <<Cycle>> calibration spreadsheet to leads
+      - Write <<Cycle>> calibration talking points @due(<<Calibration Date>> 23:55 -1d)
+      - Team <<Cycle>> calibration @due(<<Calibration Date>> 23:55 -1d)
+      - Finalize <<Cycle>> calibration @due(<<Calibration Date>> 23:55 -1d)
+      - Send <<Cycle>> calibration materials to Randy @due(<<Calibration Date>> 23:55 -1d)
+   - Team <<Cycle>> reviews @parallel(false) @autodone(true) @defer(<<Start Date>> 00:00 +1m)
+      - Schedule time to write <<Cycle>> team assessments
+<<Write Performance Reviews>>
+      - Input reviews into Workday @due(<<End Date>> 23:55 -1m)
+      - Schedule <<Cycle>> reviews @defer(<<End Date>> 00:00 -1m)
+   - Confirm <<Cycle>> assessments completed and acknowledged @defer(<<End Date>> 00:00)

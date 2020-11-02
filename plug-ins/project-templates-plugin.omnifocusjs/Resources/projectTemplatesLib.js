@@ -17,6 +17,18 @@
          return template.replace(regex, value);
       }
       
+      projectTemplatesLib.getEndOfDay = function(date8601) {
+         //Convert ISO 8601 date string to date object with a timestamp of 11:55 PM
+         let dc = new DateComponents();
+         dc.year = Number(date8601.substring(0,4));
+         dc.month = Number(date8601.substring(5,7));
+         dc.day = Number(date8601.substring(8));
+         dc.hour = 23;
+         dc.minute = 55;
+         dc.second = 0;
+         return Calendar.current.dateFromDateComponents(dc);
+      }
+      
       projectTemplatesLib.getTemplateContent = async function(templateName) {
          // Get URL of file
          const pluginName = "com.joelberger.omnifocus.project-templates-plugin";
