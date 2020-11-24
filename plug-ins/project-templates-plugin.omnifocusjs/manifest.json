@@ -13,6 +13,10 @@
       {
          "image": "code.png", 
          "identifier": "performanceCycle"
+      },
+      {
+         "image": "code.png", 
+         "identifier": "setupYearlyInfrastructure"
       }
    ],
    "libraries": [

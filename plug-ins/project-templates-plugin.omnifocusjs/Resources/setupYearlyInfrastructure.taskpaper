@@ -1,0 +1,10 @@
+## Setup <<Year>> Infrastructure @parallel(false) @autodone(true) @defer(today 00:00)
+   - Schedule <<Year>> 1:1s
+      Direct reports
+      Business partners
+      Architecture
+   - Schedule <<Year>> 2020s
+   - Schedule <<Year>> Skip-levels
+   - Schedule <<Year>> Partner Engagement Tactical meetings
+   - Setup <<Year>> PTO Calendars
+   - Setup <<Year>> Timesheet Tracker
