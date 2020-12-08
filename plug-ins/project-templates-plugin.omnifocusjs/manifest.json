@@ -17,6 +17,10 @@
       {
          "image": "code.png", 
          "identifier": "setupYearlyInfrastructure"
+      },
+      {
+         "image": "code.png", 
+         "identifier": "taxPreparation"
       }
    ],
    "libraries": [
