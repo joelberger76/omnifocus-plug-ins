@@ -1,0 +1,40 @@
+// Hook to Task(s)
+/*{
+   "author": "Joel Berger",
+   "targets": ["omnifocus"],
+   "type": "action",
+   "identifier": "com.joelberger.omnifocus.hook-to-task",
+   "version": "1.0",
+   "description": "Update selected tasks notes with Hook link and append ♾ to task name",
+   "label": "Hook to Task",
+   "mediumLabel": "Hook to Task",
+   "paletteLabel": "Hook to Task",
+}*/
+(() => {
+   var action = new PlugIn.Action(function(selection){
+      const infinityEmoji = '\u267E\uFE0F';
+      //let targetType = TypeIdentifier.rtf;
+      
+      selection.tasks.forEach(function(task) {
+         // Append task name with A
+         if (!task.name.endsWith(infinityEmoji)) {
+            task.name = task.name + " " + infinityEmoji;
+         }
+         
+         // Append pasteboard to note
+         if (task.note.length == 0) {
+            task.note = Pasteboard.general.string;
+         }
+         else {
+            task.note = task.note + '\n\n' + Pasteboard.general.string;
+         };
+      });
+   });
+
+   action.validate = function(selection, sender){
+      // selection options: tasks, projects, folders, tags
+      return (selection.tasks.length > 0)
+   };
+   
+   return action;
+})();
