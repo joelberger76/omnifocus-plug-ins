@@ -121,6 +121,12 @@
                                  await ptLib.getTemplateContent("onboardingPeopleLeader.taskpaper");           
             }
          }
+         else {
+            if (!internalTransfer) {
+               projectTemplate = projectTemplate + "\n" + 
+                                 await ptLib.getTemplateContent("onboardingContractorArriving.taskpaper");
+            }
+         }
          
          if (locationIndex == 0) {
             projectTemplate = projectTemplate + "\n" + 
