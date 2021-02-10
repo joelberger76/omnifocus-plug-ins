@@ -1,9 +1,10 @@
 ## Onboarding Template: Base
 ## <<Name>> Onboarding @autodone(true) @defer(today 00:00):
-   - Add <<Name>> to timesheet tracker
+   - Add <<Name>> to timesheet tracker with a start date of <<Start Date>>
    - Add <<Name>> to team roster
    - Request Changepoint access for <<Name>> @defer(<<Start Date>> 00:00 -7d)
    https://adcs.service-now.com/sp/?id=sc_cat_item&sys_id=1c723890dbc3b280674038ff9d961999
+   
    Workgroup: Salesforce - {Developers/Quality Assurance/Systems Analyst}
    Agile Team: {Spartans/Warriors/Gladiators/Fantastic Force}
    Time Approver: Joel Berger
