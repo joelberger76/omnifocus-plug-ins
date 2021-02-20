@@ -1,9 +1,19 @@
 ## Onboarding Template: Onsite
    - Determine seating for <<Name>>
    - Request nameplate for <<Name>> @tags(Mary Jo)
-   - Exchange mobile numbers with <<Name>> @defer(<<Start Date>> 00:00)
    - Introduce <<Name>> to team @defer(<<Start Date>> 00:00) @due(<<Start Date>> 23:55)
    - Develop onboarding plan for <<Name>>
    - Inform Randy of <<Name>>'s hiring @tags(Randy)
    - Inform critical team members of <<Name>>'s hiring
      Consider Scrum Master, Tech Lead, Peers (if People Leader)
+   - Request phone number for <<Name>>
+     https://adcs.service-now.com/sp?id=sc_cat_item&sys_id=f0094c3bdbbe760004633c8f9d9619c3
+   - Request ID badge for <<Name>> @due(<<Start Date>> 23:55 -2d)
+     https://csw.alldata.net/Retail/AccessRequest.aspx
+   - Add <<Name>> to relevant ServiceNow groups  
+     https://adcs.service-now.com/sp?id=sc_cat_item&sys_id=3379041bdb33df444e1c38ff9d961989
+     ADCS.APPDEV.ComenityBusinessCenter
+     ADCS.PRODSUPP.ComenityBusinessCenter
+     ADCS.Salesforce
+     ADCS.SDS.Appr1
+     ADCS.P1.P2.Notification

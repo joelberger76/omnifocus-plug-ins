@@ -131,10 +131,10 @@
          if (locationIndex == 0) {
             projectTemplate = projectTemplate + "\n" + 
                               await ptLib.getTemplateContent("onboardingOnsite.taskpaper");
-            if (employeeTypeIndex == 1) {
-               projectTemplate = projectTemplate + "\n" + 
-                                 await ptLib.getTemplateContent("onboardingOnsiteContractor.taskpaper");
-            }
+            //if (employeeTypeIndex == 1) {
+               //projectTemplate = projectTemplate + "\n" + 
+                                 // await ptLib.getTemplateContent("onboardingOnsiteContractor.taskpaper");
+            //}
             if (!internalTransfer) {
                projectTemplate = projectTemplate + "\n" + 
                                  await ptLib.getTemplateContent("onboardingOnsiteArriving.taskpaper");
@@ -159,6 +159,7 @@
          projectTemplate = ptLib.removeCommentLines(projectTemplate);
          projectTemplate = ptLib.populateTemplateParameter(projectTemplate, "Name", employeeName);
          projectTemplate = ptLib.populateTemplateParameter(projectTemplate, "Start Date", startDate8601);
+         projectTemplate = ptLib.populateTemplateParameter(projectTemplate, "First Name", employeeFirstName);
         
          // Create project (URL scheme doesn't reflect changes so creating in advance for sort to work)
          let projectName = employeeName + " Onboarding";
