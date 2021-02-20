@@ -1,4 +1,4 @@
-## <<Cycle>> Performance Cycle @parallel(true) @autodone(true) @due(<<End Date>> 23:55) @defer(<<Start Date>> 00:00)
+## <<Cycle>> Performance Cycle (<<Year>>) @parallel(true) @autodone(true) @due(<<End Date>> 23:55) @defer(<<Start Date>> 00:00)
    - Communicate key process dates to team @due(<<Start Date>> 23:55 +2d)
    * Self-assessments due: <<Self-Assessment Date>>
    * Calibration: <<Calibration Date>>

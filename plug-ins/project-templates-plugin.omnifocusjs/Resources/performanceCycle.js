@@ -79,8 +79,7 @@
          //console.log(projectTemplate);
         
          // Create project (URL scheme doesn't reflect changes so creating in advance for sort to work)
-         let projectName = selfAssessment8601.substring(0,4) + " " + 
-                           perfCycle + " Performance Cycle";
+         let projectName = perfCycle + " Performance Cycle (" + selfAssessment8601.substring(0,4) + ")";
          let workFolder = folderNamed("Work");
          let proj = new Project(projectName, workFolder);
          proj.deferDate = todayStart;
