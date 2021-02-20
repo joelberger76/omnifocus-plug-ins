@@ -1,23 +1,21 @@
-## <<Tax Year>> Tax Preparation @parallel(false) @autodone(true) @due(April 15 23:55) @defer(Dec 15 00:00)
+## Tax Preparation <<Tax Year>> @parallel(false) @autodone(true) @due(April 15 23:55) @defer(Dec 15 00:00)
    - Order <<Tax Year>> tax preparation software
    - Gather <<Tax Year>> Tax Documents @parallel(true) @autodone(true) @defer(<<Next Year>>-02-01 00:00)
       - Income: Alliance Data
-      - Investment: Alliance Data Employee Stock Purchase Program
       - Investment: Alliance Data HSA 
       - Investment: Ally Bank
       - Investment: Columbia Funds
-      - Investment: Fidelity ESPP and Restricted Stock Grant?
+      - Investment: Fidelity Employee Stock Purchase Program
       - Investment: Huntington Bank
-      - Investment: Nationwide Funds
-      - Investment: Savings Bond Redemption
-      - Investment: Wells Fargo 401(k)
-      - Investment: Wells Fargo EDCP
       - Kids: Ally Bank
       - Kids First Federal of Lakewood 
          2 accounts with different addresses
       - Kids: Vanguard
       - Mortgage: US Bank
-      - Other: State of Ohio Tax Refund
+      - Other: State of Ohio Tax Refund @parallel(true) @autodone(false)
+	      [Income - 1099-G and 1099-INT from the Department of Taxation]( x-devonthink-item://E9FF6D2C-1DAE-4684-BE10-83290FECA948 )
+	
+	      [Income - 1099-G and 1099-INT from the Department of Taxation]( https://tax.ohio.gov/wps/portal/gov/tax/help-center/faqs/income-1099-g-and-1099-int/income-1099-g-and-1099-int-from-the-department-of-taxation )
       - Other: Employee-Provided Health Insurance Offer and Coverage
    - <<Tax Year>> Tax Preparation @parallel(false) @autodone(true) @defer(<<Next Year>>-02-15 00:00)
       - Check for kids’ <<Tax Year>> investment income > $1050
@@ -30,12 +28,12 @@
          https://turbotax.intuit.com/tax-tips/family/tax-filing-requirements-for-children/L8ice6z0K
          
          https://www.irs.gov/publications/p929
-      - Save <<Tax Year>> tax documents to encrypted Tax Returns disk image
+      - Save <<Tax Year>> tax documents to encrypted Tax Returns DEVONthink database
       - Do <<Tax Year>> taxes
       - Update Alliance Data ESPP Form 3922 Data spreadsheet
       - Calculate withholding and update W-4 (if necessary)
          https://www.irs.gov/individuals/irs-withholding-calculator
    - Clean Up @parallel(false) @autodone(true) @defer(<<Next Year>>-02-15 00:00)
       - Print to PDF <<Tax Year>> Federal and State returns
-      - Save <<Tax Year>> PDF returns and tax software data file to encrypted Tax Returns disk image
+      - Save <<Tax Year>> PDF returns and tax software data file to encrypted Tax Returns DEVONthink database
       - Purge <<Tax Year -8 Years>> taxes

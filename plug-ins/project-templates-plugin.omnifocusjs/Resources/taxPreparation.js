@@ -41,7 +41,8 @@
          //console.log(projectTemplate);
         
          // Create project (URL scheme doesn't reflect changes so creating in advance for sort to work)
-         let projectName = taxYear + " Tax Preparation";
+         //let projectName = taxYear + " Tax Preparation";
+         let projectName =  "Tax Preparation (" + taxYear + ")";
          let homeFolder = folderNamed("Home");
          let proj = new Project(projectName, homeFolder);
          proj.deferDate = Calendar.current.startOfDay(new Date(taxYear + "/12/15"));
