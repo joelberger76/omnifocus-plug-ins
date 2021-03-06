@@ -21,12 +21,19 @@
             task.name = task.name + " " + infinityEmoji;
          }
          
+         // Workaround a bug in the OmniFocus API where the trailing parenthesis is
+         // treated as part of the link
+         let newLink = Pasteboard.general.string;
+         if (newLink.match(/.*\(\S*\)$/)) {
+            newLink = newLink.replace(/(.*)\((\S*)\)$/, "$1" + "( " + "$2" + " )");
+         }
+         
          // Append pasteboard to note
          if (task.note.length == 0) {
-            task.note = Pasteboard.general.string;
+               task.note = newLink;
          }
          else {
-            task.note = task.note + '\n\n' + Pasteboard.general.string;
+            task.note = task.note + '\n\n' + newLink;
          };
       });
    });
