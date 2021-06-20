@@ -52,6 +52,7 @@ function createProject(projName) {
    new Project(projName, folderNamed("Work"));
    
    //Create project in Toggl
+   /* Disable Toggl
    let webhookURL = folderNamed("Maintenance").projectNamed("Plug-In Configuration").taskNamed("Toggl Project Webhook").note;
    let urlStr = webhookURL + "?action=create&project=";
    let encodedProjectName = encodeURIComponent(projName);
@@ -60,6 +61,7 @@ function createProject(projName) {
    URL.fromString(urlStr + encodedProjectName).fetch(function(data) {
       return true;
    });
+   */
 }
 
 //Adapted from: https://github.com/words/ap-style-title-case

@@ -92,6 +92,7 @@ function completeProject(projName) {
 	folderNamed("Work").projectNamed(projName).status = Project.Status.Done;
          
    //Archive project in Toggl
+   /* Disable Toggl
    let webhookURL = folderNamed("Maintenance").projectNamed("Plug-In Configuration").taskNamed("Toggl Project Webhook").note;
    let urlStr = webhookURL + "?action=archive&project=";
    let encodedProjectName = encodeURIComponent(projName);
@@ -100,6 +101,7 @@ function completeProject(projName) {
    URL.fromString(urlStr + encodedProjectName).fetch(function(data) {
       return true;
    });
+   */
    
    return true;   
 }
